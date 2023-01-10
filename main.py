@@ -1,55 +1,50 @@
-import os
 import logging
+import os
 import sys
 
-from turbine.runtime import RecordList
-from turbine.runtime import Runtime
-
 import pandas as pd
+from turbine.runtime import RecordList, Runtime
 
 from deltalake import DeltaTable
 from deltalake.writer import write_deltalake
 
-
 logging.basicConfig(level=logging.INFO)
-
-
 
 
 def write_records(data: dict):
 
     storage_options = {
-        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"), 
-        "AWS_SECRET_ACCESS_KEY":os.getenv("AWS_SECRET_ACCESS_KEY"), 
+        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+        "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
         "AWS_REGION": os.getenv("AWS_REGION"),
-        "AWS_S3_ALLOW_UNSAFE_RENAME": "true"
+        "AWS_S3_ALLOW_UNSAFE_RENAME": "true",
     }
 
-    
-
+    # Try to write to a DeltaTable. Catch the error if it does not exist and attempt 
+    # to create the table 
     try:
         dt = DeltaTable(
-        "s3://cheatham-s3-testing/deltas2/", 
-        storage_options=storage_options
-    )
-        write_deltalake(
-            table_or_uri=dt, 
-            data=pd.DataFrame(data=data), 
-            mode='update'
+            "s3://cheatham-s3-testing/deltas2/", storage_options=storage_options
         )
+        write_deltalake(table_or_uri=dt, data=pd.DataFrame(data=data), mode="update")
     except:
-         write_deltalake(
-            table_or_uri="s3://cheatham-s3-testing/deltas2/", 
+        write_deltalake(
+            table_or_uri="s3://cheatham-s3-testing/deltas2/",
             data=pd.DataFrame(data=data),
-            storage_options=storage_options
+            storage_options=storage_options,
         )
 
 def write_to_delta(records: RecordList) -> RecordList:
+    """
+    In order to write to a DeltaTable using delta-rs we need to convert our Record/Fixture
+    data into a [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
 
+    We are stepping through all available records and parsing out the value in `payload`. The 
+    key in `payload` corresponds to the column name, the value is the row value. 
+    """
     data = {}
 
     for record in records:
-        logging.info(f"input: {record}")
 
         payload = record.value["payload"]
         for key, val in payload.items():
@@ -59,7 +54,7 @@ def write_to_delta(records: RecordList) -> RecordList:
                 data.update({key: [val]})
 
     write_records(data=data)
-        
+
     return records
 
 

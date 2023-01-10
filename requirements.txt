@@ -1,9 +1,5 @@
 turbine-py==1.7.1
 
 # Delta Lake things
-
-# compatability matrix: https://docs.delta.io/latest/releases.html
-# pyspark==3.3.1 
-# delta-spark==2.2.0
-deltalake
+deltalake==0.6.4
 pandas==1.5.2
