@@ -10,6 +10,7 @@ from deltalake.writer import write_deltalake
 
 logging.basicConfig(level=logging.INFO)
 
+S3_URI="s3://cheatham-s3-testing/deltas2/"
 
 def write_records(data: dict):
 
@@ -24,12 +25,12 @@ def write_records(data: dict):
     # to create the table 
     try:
         dt = DeltaTable(
-            "s3://cheatham-s3-testing/deltas2/", storage_options=storage_options
+            S3_URI, storage_options=storage_options
         )
         write_deltalake(table_or_uri=dt, data=pd.DataFrame(data=data), mode="update")
     except:
         write_deltalake(
-            table_or_uri="s3://cheatham-s3-testing/deltas2/",
+            table_or_uri=S3_URI,
             data=pd.DataFrame(data=data),
             storage_options=storage_options,
         )
