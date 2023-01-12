@@ -2,6 +2,6 @@
     "name": "deltalake",
     "language": "python",
     "resources": {
-        "source_name": "fixtures/demo-cdc.json"
+        "source_name": "fixtures/demo-no-cdc.json"
     }
 }

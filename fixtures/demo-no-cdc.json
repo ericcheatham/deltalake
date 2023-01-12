@@ -44,11 +44,11 @@
           },
           "payload": {
             "activity": "registered",
-            "updated_at": 1643214353680,
+            "updated_at": 1643214353681,
             "user_id": 108,
             "created_at": 1643214353680,
             "id": 1,
-            "deleted_at": null,
+            "deleted_at": 1643214353681,
             "email": "user8@example.com"
           }
         }
