@@ -6,8 +6,7 @@ import pandas as pd
 from turbine.runtime import RecordList, Runtime
 
 from deltalake import DeltaTable
-from deltalake.writer import write_deltalake
-
+from deltalake import writer
 logging.basicConfig(level=logging.INFO)
 
 S3_URI="s3://cheatham-s3-testing/deltas2/"
@@ -21,19 +20,24 @@ def write_records(data: dict):
         "AWS_S3_ALLOW_UNSAFE_RENAME": "true",
     }
 
+   
     # Try to write to a DeltaTable. Catch the error if it does not exist and attempt 
     # to create the table 
-    try:
-        dt = DeltaTable(
-            S3_URI, storage_options=storage_options
-        )
-        write_deltalake(table_or_uri=dt, data=pd.DataFrame(data=data), mode="update")
-    except:
-        write_deltalake(
-            table_or_uri=S3_URI,
-            data=pd.DataFrame(data=data),
-            storage_options=storage_options,
-        )
+    # try:
+    dt = DeltaTable(
+        S3_URI, storage_options=storage_options
+    )
+    writer.write_deltalake(
+        table_or_uri=dt, 
+        data=pd.DataFrame(data=data), 
+        mode="update"
+    )
+    # except:
+    #     writer.write_deltalake(
+    #         table_or_uri=S3_URI,
+    #         data=pd.DataFrame(data=data),
+    #         storage_options=storage_options,
+    #     )
 
 def write_to_delta(records: RecordList) -> RecordList:
     """
@@ -63,7 +67,7 @@ class App:
     @staticmethod
     async def run(turbine: Runtime):
         try:
-            source = await turbine.resources("pg")
+            source = await turbine.resources("source_name")
 
             records = await source.records("customer_order")
 
