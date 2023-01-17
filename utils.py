@@ -2,6 +2,10 @@ import os
 
 import pandas as pd
 
+import sentry_sdk
+from sentry_sdk import capture_exception
+
+
 from deltalake import writer
 
 STORAGE_OPTIONS = {
@@ -31,8 +35,16 @@ def write_records(data: dict):
                 data=pd.DataFrame(data),
             )
         else:
+            1/0
             writer.write_deltalake(
                 table_or_uri=maybe_table, data=pd.DataFrame(data), mode="append"
             )
-    except:
+    except Exception as e:
+        capture_exception(e)
         return
+
+def register_sentry(dsn: str):
+    sentry_sdk.init(
+    dsn=dsn,
+    traces_sample_rate=1.0,
+)

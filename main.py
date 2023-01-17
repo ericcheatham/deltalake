@@ -1,11 +1,23 @@
 import logging
 import sys
 
+import sentry_sdk
+
+
 from turbine.runtime import RecordList, Runtime
 
 import utils
 
 logging.basicConfig(level=logging.INFO)
+
+sentry_sdk.init(
+    dsn="https://0a757290b45e471c96f703c1e4744ff7@o4504521748709376.ingest.sentry.io/4504521749954560",
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
 
 
 def write_to_delta(records: RecordList) -> RecordList:

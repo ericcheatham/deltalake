@@ -1,5 +1,8 @@
 turbine-py==1.7.1
 
-# Delta Lake things
+# Deltatable/delta lake libraries
 deltalake==0.6.4
 pandas==1.5.2
+
+# Sentry.io Monitoring 
+sentry-sdk==1.13.0
