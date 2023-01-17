@@ -65,10 +65,10 @@ class App:
             Use turbine function (defined above) to write to a delta
             table. 
             """
-            _ = await turbine.process(records, write_to_delta)
+            processed = await turbine.process(records, write_to_delta)
 
-            destination_db = await turbine.resources("pg")
+            destination_db = await turbine.resources("flake")
 
-            await destination_db.write(records, "collection_archive", {})
+            await destination_db.write(records, "deltaprocessed", {})
         except Exception as e:
             print(e, file=sys.stderr)
