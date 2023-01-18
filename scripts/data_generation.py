@@ -24,6 +24,7 @@ cursor.execute(
         department_id INTEGER NOT NULL,
         gender_id INTEGER NOT NULL,
         address CHARACTER VARYING (100) NOT NULL,
+        postcode CHARACTER VARYING (10) NOT NULL,
         city_id INTEGER NOT NULL,
         email CHARACTER VARYING (100) NOT NULL,
         employment_start DATE NOT NULL
@@ -39,13 +40,14 @@ for _ in range(20):
     department_id = faker.random_int(min=1, max=5)
     gender_id = faker.random_int(min=1, max=2)
     address = faker.address()
+    postcode = faker.postcode()
     city_id = faker.random_int(min=1, max=5)
     email = faker.email()
     employment_start = faker.date()
 
     # Execute an SQL INSERT command, passing in the generated data as values
     cursor.execute(
-        f"INSERT INTO employees (first_name, last_name, job_title_id, department_id, gender_id, address, city_id, email, employment_start) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        f"INSERT INTO employees (first_name, last_name, job_title_id, department_id, gender_id, address, postcode, city_id, email, employment_start) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         (
             first_name,
             last_name,
@@ -53,6 +55,7 @@ for _ in range(20):
             department_id,
             gender_id,
             address,
+            postcode,
             city_id,
             email,
             employment_start,
