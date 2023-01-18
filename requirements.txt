@@ -6,3 +6,7 @@ pandas==1.5.2
 
 # Sentry.io Monitoring 
 sentry-sdk==1.13.0
+
+# Test Data generation
+psycopg==3.1.8
+faker==16.0.0

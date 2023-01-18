@@ -1,9 +1,8 @@
+import os
 import logging
 import sys
 
 import sentry_sdk
-
-
 from turbine.runtime import RecordList, Runtime
 
 import utils
@@ -11,12 +10,8 @@ import utils
 logging.basicConfig(level=logging.INFO)
 
 sentry_sdk.init(
-    dsn="https://0a757290b45e471c96f703c1e4744ff7@o4504521748709376.ingest.sentry.io/4504521749954560",
-
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0
+    dsn=os.getenv("SENTRY_DSN"),
+    traces_sample_rate=0.5,
 )
 
 
@@ -60,6 +55,7 @@ class App:
             turbine.register_secrets("AWS_SECRET_ACCESS_KEY")
             turbine.register_secrets("AWS_REGION")
             turbine.register_secrets("AWS_URI")
+            turbine.register_secrets("SENTRY_DSN")
 
             """
             Connect your turbine application to your data 
@@ -81,6 +77,6 @@ class App:
 
             destination_db = await turbine.resources("flake")
 
-            await destination_db.write(records, "deltaprocessed", {})
+            await destination_db.write(processed, "deltaprocessed", {})
         except Exception as e:
             print(e, file=sys.stderr)
